@@ -1,0 +1,13 @@
+<%if(isAlreadyFed){ %>
+<div>
+  <h3>Dog already fed recently! Try after <%= duration %> hours for this <%= dogType %>!.</h3>
+  <p>Thank you! Visit us again...</p>
+  <a class="btn-upload" href="/" style="text-decoration: none;">Back to Home Page</a>
+</div>
+<% }else{ %>
+<div>
+  <h2>Mission PupProof: Food supply successfull for this <%= dogType %>!</h2>
+  <p>Thank you! Visit us again...</p>
+  <a class="btn-upload" href="/" style="text-decoration: none;">Back to Home Page</a>
+</div>
+  <% } %>
