@@ -1,23 +1,23 @@
-<% let totalPoints = history.reduce((sum, e) => sum + (e.pointsEarned || 0), 0); %>
-<div class="container my-4">
-  <% if (success && success.length> 0) { %> <% success.forEach(msg=> { %>
-  <div class="alert alert-success text-center"><%= msg %></div>
-  <% }) %> <% } %> <% if (wrong && wrong.length> 0) { %> <% wrong.forEach(msg=>
-  { %>
-  <div class="alert alert-danger text-center"><%= msg %></div>
-  <% }) %> <% } %>
+<% let totalPoints=history.reduce((sum, e)=> sum + (e.pointsEarned || 0), 0); %>
+<% if (success && success.length > 0) { %>
+<div class="alert alert-success text-center"><%= success %></div>
+<% } %> <% if (wrong && wrong.length > 0) { %>
+<div class="alert alert-danger text-center"><%= wrong %></div>
+<% } %>
+
+<div class="my-4">
   <div class="d-flex align-items-center mb-3">
     <i class="fa-solid fa-user fa-lg text-primary me-2"></i>
     <h3 class="m-0"><%= user.name %></h3>
   </div>
 
-  <div class="d-flex flex-wrap justify-content-evenly gap-3">
+  <div class="d-flex flex-wrap justify-content-evenly gap-2">
     <div
-      class="card p-4 mb-4 flex-fill"
-      style="min-width: 300px; max-width: 400px"
+      class="card p-2 mb-4 flex-fill"
+      style="min-width: 300px; max-width: 325px"
     >
       <div class="text-center">
-        <img src="../assets/logo2.png" alt="PupProof Logo" class="logo mb-2" />
+        <img src="../assets/img1.png" alt="PupProof Logo" class="logo mb-2" />
         <h4>Refill Dog Feeder</h4>
         <small class="text-muted">Add 2 images before and after fill!</small>
         <form
@@ -25,6 +25,12 @@
           method="POST"
           enctype="multipart/form-data"
           class="d-flex flex-column align-items-center mt-3"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+          "
         >
           <input
             type="file"
@@ -47,7 +53,6 @@
       </div>
     </div>
 
-    <!-- Points Card -->
     <div
       class="card p-4 mb-4 text-center flex-fill"
       style="min-width: 200px; max-width: 300px"
@@ -64,9 +69,36 @@
       <p>Keep refilling nearby feeders to earn more points!</p>
     </div>
 
-    <!-- History Card -->
+    <div class="card mb-4 text-center flex-fill" style="max-width: 500px">
+  <h4>Wallet & PupCoins</h4>
+
+  <p id="walletAddress" class="text-muted">
+    Wallet:
+    <i><%= user.walletAddress || "Not connected" %></i>
+  </p>
+
+  <p class="text-primary display-6">Coins: <%= user.coins || 0 %></p>
+
+  <h4>Wallet Actions</h4>
+<button id="connectWallet" class="btn btn-primary mb-2"
+        style="<%= user.walletAddress ? 'display:none;' : '' %>">
+  Connect MetaMask
+</button>
+
+<button id="mintCoins" class="btn btn-success mb-2"
+        style="<%= user.walletAddress ? '' : 'display:none;' %>">
+  Mint PupCoins
+</button>
+
+</div>
+
+
+    <hr
+      style="width: 100%; height: 1px; background-color: black; border: none"
+    />
+
     <div
-      class="card p-3 mb-4 flex-fill"
+      class="card p-3 mb-4 mt-4 flex-fill"
       style="min-width: 300px; max-width: 600px"
     >
       <h4>Your Refill History</h4>
@@ -112,3 +144,4 @@
     <a href="/user/logout" class="btn btn-danger">Logout</a>
   </div>
 </div>
+<script src="/JS/dashboard.js"></script>

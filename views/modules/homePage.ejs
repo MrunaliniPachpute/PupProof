@@ -1,3 +1,11 @@
+<% if (success.length > 0) { %>
+  <div class="alert alert-success text-center"><%= success%></div>
+<% } %>
+
+<% if (wrong.length > 0) { %>
+  <div class="alert alert-danger text-center"><%= wrong %></div>
+<% } %>
+
 <div class="text-center">
   <div class="card p-4">
     <img src="../assets/Logo.png" alt="PupProof Logo" class="logo">

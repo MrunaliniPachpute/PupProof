@@ -55,11 +55,14 @@ app.set("layout", "layout/boilerplate");
 app.use(expressLayouts);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
+app.use(express.json());
 app.use(flash());
 
 app.use((req, res, next) => {
-  res.locals.success = req.flash("success");
-  res.locals.wrong = req.flash("wrong");
+  const successMsgs = req.flash("success");
+  const wrongMsgs = req.flash("wrong");
+  res.locals.success = successMsgs.length > 0 ? successMsgs[0] : "";
+  res.locals.wrong = wrongMsgs.length > 0 ? wrongMsgs[0] : "";
   next();
 });
 
@@ -146,7 +149,7 @@ app.post("/user/signup", async (req, res) => {
         "success",
         "Signup successful! Welcome " + user.name + "to PupProof"
       );
-      res.redirect("modules/dashboard");
+      res.redirect("/user/dashboard");
     });
   } catch (err) {
     console.error(err);
@@ -156,10 +159,12 @@ app.post("/user/signup", async (req, res) => {
 });
 
 app.get("/user/dashboard", ensureAuthenticated, async (req, res) => {
-  const user = req.user;
+  const user = await User.findById(req.user._id);
+  console.log("User from DB:", user);
   const history = await RefillEvent.find({ userId: user._id }).sort({
     timestamp: -1,
   });
+  console.log("Refill history:", history); // <-- add this
 
   const totalPoints = history.reduce(
     (sum, e) => sum + (e.pointsEarned || 0),
@@ -169,9 +174,7 @@ app.get("/user/dashboard", ensureAuthenticated, async (req, res) => {
   res.render("modules/dashboard", {
     user,
     history,
-    totalPoints,
-    success: req.flash("success"),
-    wrong: req.flash("wrong"),
+    totalPoints: user.coins || 0 ,
   });
 });
 
@@ -179,14 +182,21 @@ app.get("/user/login", (req, res) => {
   res.render("modules/Login.ejs");
 });
 
-app.post(
-  "/user/login",
-  passport.authenticate("local", {
-    successRedirect: "/user/dashboard",
-    failureRedirect: "/user/login",
-    failureFlash: true,
-  })
-);
+app.post("/user/login", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) return next(err);
+    if (!user) {
+      req.flash("wrong", "Invalid email or password");
+      return res.redirect("/user/login");
+    }
+
+    req.logIn(user, (err) => {
+      if (err) return next(err);
+      req.flash("success", `Welcome back, ${user.name}`);
+      return res.redirect("/user/dashboard");
+    });
+  })(req, res, next);
+});
 
 app.get("/user/logout", (req, res) => {
   req.logout(() => {
@@ -203,8 +213,14 @@ app.post(
       const beforeImg = req.files.beforeFill[0];
       const afterImg = req.files.afterFill[0];
 
-      const beforeCid = await uploadToPinata(beforeImg.buffer, beforeImg.originalname);
-      const afterCid = await uploadToPinata(afterImg.buffer, afterImg.originalname);
+      const beforeCid = await uploadToPinata(
+        beforeImg.buffer,
+        beforeImg.originalname
+      );
+      const afterCid = await uploadToPinata(
+        afterImg.buffer,
+        afterImg.originalname
+      );
 
       const beforeUrl = `https://gateway.pinata.cloud/ipfs/${beforeCid}`;
       const afterUrl = `https://gateway.pinata.cloud/ipfs/${afterCid}`;
@@ -212,13 +228,13 @@ app.post(
       await RefillEvent.create({
         userId: req.user._id,
         machineId: uuidv4(),
-        beforeImg: beforeUrl,  // IPFS link
-        afterImg: afterUrl,    //IPFS link
-        pointsEarned: 1,
+        beforeImg: beforeUrl, // IPFS link
+        afterImg: afterUrl, //IPFS link
+        pointsEarned: 0,
         status: "pending",
       });
 
-      req.flash("success", "Refill submitted! Points earned.");
+      req.flash("success", "Refill submitted for review! ");
       res.redirect("/user/dashboard");
     } catch (err) {
       console.error(err);
@@ -227,7 +243,6 @@ app.post(
     }
   }
 );
-
 
 //ADMIN ROUTES
 
@@ -270,7 +285,7 @@ app.post("/admin/signup", async (req, res) => {
 });
 
 app.get("/admin/login", (req, res) => {
-  res.render("modules/adminLogin", { wrong: req.flash("wrong") });
+  res.render("modules/adminLogin");
 });
 
 app.post("/admin/login", async (req, res) => {
@@ -303,9 +318,19 @@ app.post("/admin/request/:id/accept", ensureAdmin, async (req, res) => {
   const request = await RefillEvent.findById(req.params.id).populate("userId");
   if (request && request.status === "pending") {
     request.status = "completed";
-    request.pointsEarned = 1; // <-- this is what the dashboard sums
+    request.pointsEarned = 1; //dashboard sum
     await request.save();
+    //update in wallet bal.
+    const user = request.userId;
+    user.coins = (user.coins || 0) + request.pointsEarned;
+    await user.save();
+    console.log(
+      `Minted ${request.pointsEarned} PupCoins to ${
+        user.walletAddress || "DB only"
+      }`
+    );
   }
+
   res.redirect("/admin/dashboard");
 });
 
@@ -313,8 +338,17 @@ app.post("/admin/request/:id/reject", ensureAdmin, async (req, res) => {
   const request = await RefillEvent.findById(req.params.id).populate("userId");
   if (request && request.status === "pending") {
     request.status = "failed";
-    request.pointsEarned = 0; // or -0.5 if you want negative points
+    request.pointsEarned = -0.5;
     await request.save();
+
+    const user = request.userId;
+    if (user.walletAddress) {
+      user.coins = (user.coins || 0) + request.pointsEarned;
+      await user.save();
+      console.log(
+        `Minted ${request.pointsEarned} PupCoins to ${user.walletAddress}`
+      );
+    }
   }
   res.redirect("/admin/dashboard");
 });
@@ -322,6 +356,53 @@ app.post("/admin/request/:id/reject", ensureAdmin, async (req, res) => {
 app.get("/admin/logout", (req, res) => {
   req.session.isAdmin = false;
   res.redirect("/admin/login");
+});
+
+//USER WALLET ROUTES
+
+app.post("/save-wallet", async (req, res) => {
+  try {
+    console.log("Save wallet hit!");
+    console.log("req.user:", req.user);
+    console.log("req.session:", req.session);
+
+    const { wallet } = req.body;
+    console.log("Wallet from body:", wallet);
+
+    if (!req.user) {
+      return res.status(401).json({ error: "Not logged in" });
+    }
+
+    await User.updateOne(
+      { _id: req.user._id },
+      { $set: { walletAddress: wallet } }
+    );
+
+    res.json({ success: true, wallet });
+  } catch (err) {
+    console.error("Save wallet error:", err);
+    res.status(500).json({ error: "Server error", details: err.message });
+  }
+});
+
+app.post("/mint-coins", async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ error: "Not logged in" });
+    }
+    const coinsToMint = 5;
+
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    user.coins = (user.coins || 0) + coinsToMint;
+    await user.save();
+    req.user.coins = user.coins;
+    res.json({ success: true, newBalance: user.coins });
+  } catch (err) {
+    console.error("Mint coins error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
 app.listen(Port, () => {

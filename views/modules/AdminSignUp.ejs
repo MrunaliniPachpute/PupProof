@@ -1,17 +1,12 @@
+<% if (success && success.length>0) { %>
+  <div class="alert alert-success text-center"><%= success %></div>
+<% } %>
+<% if (wrong && wrong.length.length>0) { %>
+  <div class="alert alert-danger text-center"><%= wrong %></div>
+<% } %>
+
 <div class="container mt-5" style="max-width:400px;">
   <h3 class="text-center mb-3">Admin Signup</h3>
-
-  <% if(wrong && wrong.length > 0){ %>
-    <% wrong.forEach(msg => { %>
-      <div class="alert alert-danger"><%= msg %></div>
-    <% }) %>
-  <% } %>
-
-  <% if(success && success.length > 0){ %>
-    <% success.forEach(msg => { %>
-      <div class="alert alert-success"><%= msg %></div>
-    <% }) %>
-  <% } %>
 
   <form action="/admin/signup" method="POST">
     <div class="mb-2">

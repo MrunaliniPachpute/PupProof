@@ -1,5 +1,11 @@
-<div class="container my-4">
+<% if (success && success.length>0) { %>
+  <div class="alert alert-success text-center"><%= success %></div>
+<% } %>
+<% if (wrong && wrong.length>0) { %>
+  <div class="alert alert-danger text-center"><%= wrong %></div>
+<% } %>
 
+<div class="container my-4">
   <h3 class="mb-3 text-center">Refill Requests</h3>
 
   <table class="table table-striped">
