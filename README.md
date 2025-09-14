@@ -1,4 +1,4 @@
-# <img src="public/assets/logo2.png" alt="PupProof Logo" width="40"/> PupProof – Blockchain-Powered Smart Dog Feeder
+# <img src="public/assets/Logo.png" alt="PupProof Logo" width="40"/> PupProof – Blockchain-Powered Smart Dog Feeder
 
 ## 📝Overview  
 **PupProof** is a next-gen smart dog feeder that fuses **IoT, AI, and Blockchain** to ensure fair feeding, transparent proof storage, and gamified rewards.  
