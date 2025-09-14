@@ -1,14 +1,14 @@
 # <img src="public/assets/logo2.png" alt="PupProof Logo" width="40"/> PupProof – Blockchain-Powered Smart Dog Feeder
 
-## 🐾Overview  
+## 📝Overview  
 **PupProof** is a next-gen smart dog feeder that fuses **IoT, AI, and Blockchain** to ensure fair feeding, transparent proof storage, and gamified rewards.  
 
-- 🛠️ **Arduino + Servo Motor** vending prototype  
-- 🤖 **Azure Computer Vision** → Puppy vs. Adult detection  
-- 🗂️ **MongoDB** → Prevents duplicate feeding within timeframe  
-- 🌐 **IPFS (Pinata)** → Tamper-proof refill proofs  
-- 🔑 **MetaMask login** → Wallet-based identity  
-- 🪙 **PupCoins** → Reward system with ERC-20 upgrade path  
+- 1. **Arduino + Servo Motor** vending prototype  
+- 2. **Azure Computer Vision** → Puppy vs. Adult detection  
+- 3. **MongoDB** → Prevents duplicate feeding within timeframe  
+- 4. **IPFS (Pinata)** → Tamper-proof refill proofs  
+- 5. **MetaMask login** → Wallet-based identity  
+- 6. **PupCoins** → Reward system with ERC-20 upgrade path  
 
 ---
 
