@@ -12,7 +12,10 @@
 
 ---
 ## Preview
-<video src="public/assets/snippetOfWorkingIot.mp4" width="500" height="500" autoplay loop muted></video>
+<p align="center">
+  <img src="public/assets/p2.png" width="45%"/>
+  <img src="public/assets/p1.png" width="45%"/>
+</p>
 ---
 ## ✨ Key Features  
 
