@@ -77,7 +77,7 @@
 - **Database**: MongoDB  
 - **AI**: Azure Computer Vision API  
 - **IoT**: Arduino Nano, Servo Motor, LED  
-- **Blockchain**: IPFS (Pinata), MetaMask, ERC-20 (future upgrade)  
+- **Blockchain**: IPFS (Pinata), MetaMask with simulated tokens
 
 ---
 
