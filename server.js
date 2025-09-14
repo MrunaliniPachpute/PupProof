@@ -3,6 +3,7 @@ const app = express();
 const expressLayouts = require("express-ejs-layouts");
 const path = require("path");
 const Port = 3000;
+const cors = require("cors");
 const multer = require("multer");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
@@ -19,13 +20,13 @@ const RefillEvent = require("./views/models/RefillEvent");
 const MongoStore = require("connect-mongo");
 const Admin = require("./views/models/Admin");
 
-mongoose
-  .connect("mongodb://127.0.0.1:27017/pupproof", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("MongoDB connected successfully"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log("MongoDB connected successfully"))
+.catch((err) => console.error("MongoDB connection error:", err));
+
 
 // Models
 const DogEvent = require("./views/models/DogEvent");
@@ -56,6 +57,7 @@ app.use(expressLayouts);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(express.json());
+app.use(cors());
 app.use(flash());
 
 app.use((req, res, next) => {
@@ -228,8 +230,8 @@ app.post(
       await RefillEvent.create({
         userId: req.user._id,
         machineId: uuidv4(),
-        beforeImg: beforeUrl, // IPFS link
-        afterImg: afterUrl, //IPFS link
+        beforeImg: beforeCid, 
+        afterImg: afterCid,
         pointsEarned: 0,
         status: "pending",
       });
@@ -404,6 +406,27 @@ app.post("/mint-coins", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+
+app.get("/ipfs/:cid", async (req, res) => {
+  const { cid } = req.params;
+  try {
+    const response = await fetch(`https://gateway.pinata.cloud/ipfs/${cid}`);
+    if (!response.ok) {
+      return res.status(502).send("Failed to fetch image from Pinata");
+    }
+    const contentType = response.headers.get("content-type") || "image/jpeg";
+    res.set("Content-Type", contentType);
+
+    const buffer = await response.arrayBuffer();
+    res.send(Buffer.from(buffer));
+  } catch (err) {
+    console.error("IPFS fetch error:", err);
+    res.status(500).send("Server error fetching IPFS image");
+  }
+});
+
 
 app.listen(Port, () => {
   console.log(`We are listening at http://localhost:${Port}`);

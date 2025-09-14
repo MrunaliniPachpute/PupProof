@@ -1,8 +1,7 @@
 <% if (success && success.length>0) { %>
-  <div class="alert alert-success text-center"><%= success %></div>
-<% } %>
-<% if (wrong && wrong.length>0) { %>
-  <div class="alert alert-danger text-center"><%= wrong %></div>
+<div class="alert alert-success text-center"><%= success %></div>
+<% } %> <% if (wrong && wrong.length>0) { %>
+<div class="alert alert-danger text-center"><%= wrong %></div>
 <% } %>
 
 <div class="container my-4">
@@ -23,68 +22,74 @@
       </tr>
     </thead>
     <tbody>
-      <% if (requests && requests.length> 0) { %>
-        <% requests.forEach((req, index)=> { %>
-          <tr>
-            <td>
-              <%= index + 1 %>
-            </td>
-            <td>
-              <%= req.userId ? req.userId.name : "Unknown" %>
-            </td>
-            <td>
-              <%= req.machineId %>
-            </td>
-            <td>
-              <%= req.timestamp.toLocaleString() %>
-            </td>
-            <td>
-              <a href="<%= req.beforeImg %>" target="_blank">
-                <img src="<%= req.beforeImg %>" style="width:80px;" />
-              </a>
-            </td>
-            <td>
-              <a href="<%= req.afterImg %>" target="_blank">
-                <img src="<%= req.afterImg %>" style="width:80px;" />
-              </a>
-            </td>
+      <% if (requests && requests.length> 0) { %> <% requests.forEach((req,
+      index)=> { %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= req.userId ? req.userId.name : "Unknown" %></td>
+        <td><%= req.machineId %></td>
+        <td><%= req.timestamp.toLocaleString() %></td>
+        <td>
+          <% if (req.beforeImg) { %>
+          <a href="/ipfs/<%= req.beforeImg %>" target="_blank">
+            <img
+              src="/ipfs/<%= req.beforeImg %>"
+              class="img-thumbnail"
+              style="width: 80px; height: 80px; object-fit: cover"
+            />
+          </a>
+          <% } %>
+        </td>
+        <td>
+          <% if (req.afterImg) { %>
+          <a href="/ipfs/<%= req.afterImg %>" target="_blank">
+            <img
+              src="/ipfs/<%= req.afterImg %>"
+              class="img-thumbnail"
+              style="width: 80px; height: 80px; object-fit: cover"
+            />
+          </a>
+          <% } %>
+        </td>
 
-            <td>
-              <%= req.pointsEarned %>
-            </td>
-            <td>
-              <% if(req.status==='completed' ) { %>
-                <span class="badge bg-success">Completed</span>
-                <% } else if(req.status==='pending' ) { %>
-                  <span class="badge bg-warning text-dark">Pending</span>
-                  <% } else { %>
-                    <span class="badge bg-danger">Rejected</span>
-                    <% } %>
-            </td>
-            <td>
-              <% if(req.status==='pending' ) { %>
-                <form action="/admin/request/<%= req._id %>/accept" method="POST" style="display:inline">
-                  <button class="btn btn-sm btn-success">Accept</button>
-                </form>
-                <form action="/admin/request/<%= req._id %>/reject" method="POST" style="display:inline">
-                  <button class="btn btn-sm btn-danger">Reject</button>
-                </form>
-                <% } else { %>
-                  -
-                  <% } %>
-            </td>
-          </tr>
-          <% }) %>
-            <% } else { %>
-              <tr>
-                <td colspan="7" class="text-center">No refill requests yet.</td>
-              </tr>
-              <% } %>
+        <td><%= req.pointsEarned %></td>
+        <td>
+          <% if(req.status==='completed' ) { %>
+          <span class="badge bg-success">Completed</span>
+          <% } else if(req.status==='pending' ) { %>
+          <span class="badge bg-warning text-dark">Pending</span>
+          <% } else { %>
+          <span class="badge bg-danger">Rejected</span>
+          <% } %>
+        </td>
+        <td>
+          <% if(req.status==='pending' ) { %>
+          <form
+            action="/admin/request/<%= req._id %>/accept"
+            method="POST"
+            style="display: inline"
+          >
+            <button class="btn btn-sm btn-success">Accept</button>
+          </form>
+          <form
+            action="/admin/request/<%= req._id %>/reject"
+            method="POST"
+            style="display: inline"
+          >
+            <button class="btn btn-sm btn-danger">Reject</button>
+          </form>
+          <% } else { %> - <% } %>
+        </td>
+      </tr>
+      <% }) %> <% } else { %>
+      <tr>
+        <td colspan="7" class="text-center">No refill requests yet.</td>
+      </tr>
+      <% } %>
     </tbody>
   </table>
 
   <div class="text-center mt-4">
     <a href="/admin/logout" class="btn btn-danger">Logout</a>
   </div>
-
 </div>
