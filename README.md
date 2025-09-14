@@ -68,5 +68,5 @@ npm install
 ```
 # Run server
 ```
-npm start
+node server.js
 ```
