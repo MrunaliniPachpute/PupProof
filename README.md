@@ -8,15 +8,14 @@
 -  **MongoDB** → Prevents duplicate feeding within timeframe  
 -  **IPFS (Pinata)** → Tamper-proof refill proofs  
 -  **MetaMask login** → Wallet-based identity  
--  **PupCoins** → Reward system with ERC-20 upgrade path  
+-  **PupCoins** → Reward system tokens
 
 ---
 
 ## ✨ Key Features  
 
 ### 🐕 IoT + AI  
-- Arduino Nano + Servo Motor for food dispensing  
-- LED indicator for refill confirmation  
+- Arduino Nano + Servo Motor for food dispensing    
 - Azure CV validates uploaded dog images  
 
 ### 🗂️ Fairness Control  
@@ -26,7 +25,7 @@
 ### 🌐 Blockchain Power  
 - **IPFS + Pinata** → Immutable refill proofs  
 - **MetaMask** → Decentralized login & wallet mapping  
-- **PupCoins** → Gamified rewards → future ERC-20 tokens  
+- **PupCoins** → Gamified rewards → tokens
 
 ### 🎮 Gamification  
 - PupCoins credited for verified refills  
@@ -37,12 +36,39 @@
 
 ## 🖼️ Workflow  
 
-1. User logs in with MetaMask → uploads dog image  
-2. Azure CV validates → Arduino feeder dispenses food (LED blinks)  
-3. Proof image stored on **IPFS** → CID saved in MongoDB  
-4. Admin reviews → Rewards (PupCoins) sent to user’s wallet  
+1. **🐕 Dog Approaches System**  
+   - Current: User uploads a **noseprint image**  
+   - Future: Sensors/camera will capture noseprint automatically  
 
----
+2. **🤖 Dog Identification**  
+   - **Azure CV** classifies →  
+     - Puppy → *3 sec feed / 3 hr cooldown*  
+     - Adult → *5 sec feed / 5 hr cooldown*  
+   - **MongoDB** checks last feed record → If dog already fed, cooldown time is shown  
+
+3. **⚙️ Feeding via IoT**  
+   - If eligible → **Node.js** communicates with **Arduino (serial port)**  
+   - Servo motor dispenses food for required duration  
+
+4. **🔒 Proof Generation**  
+   - Captured noseprint → Uploaded to **IPFS via Pinata**  
+   - CID stored in **MongoDB** → Immutable & tamper-proof record  
+
+5. **🌍 Community Refill Action**  
+   - Users nearby can **refill the food machine**  
+   - Upload **before/after images** → Stored on IPFS  
+   - CID logged in database  
+
+6. **🛡️ Admin Verification**  
+   - Admin reviews refill proofs  
+   - ✅ If valid → Approves refill & rewards user  
+   - ❌ If invalid → Penalty applied (*-0.5 PupCoins*)  
+
+7. **🎮 Rewards (Blockchain Simulation)**  
+   - Users log in via **MetaMask wallet**  
+   - **PupCoins** (simulated tokens) credited to balance  
+   - Real-time balance & activity visible on **user dashboard**  
+
 
 ## 🛠️ Tech Stack  
 
@@ -51,7 +77,7 @@
 - **Database**: MongoDB  
 - **AI**: Azure Computer Vision API  
 - **IoT**: Arduino Nano, Servo Motor, LED  
-- **Blockchain**: IPFS (Pinata), MetaMask, ERC-20 (future upgrade)  
+- **Blockchain**: IPFS (Pinata), MetaMask with simulated tokens
 
 ---
 
@@ -68,5 +94,5 @@ npm install
 ```
 # Run server
 ```
-npm start
+node server.js
 ```
