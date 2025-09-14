@@ -8,7 +8,7 @@
 -  **MongoDB** → Prevents duplicate feeding within timeframe  
 -  **IPFS (Pinata)** → Tamper-proof refill proofs  
 -  **MetaMask login** → Wallet-based identity  
--  **PupCoins** → Reward system with ERC-20 upgrade path  
+-  **PupCoins** → Reward system tokens
 
 ---
 
