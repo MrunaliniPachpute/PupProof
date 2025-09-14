@@ -49,7 +49,6 @@
 3. **⚙️ Feeding via IoT**  
    - If eligible → **Node.js** communicates with **Arduino (serial port)**  
    - Servo motor dispenses food for required duration  
-   - LED indicator blinks for confirmation  
 
 4. **🔒 Proof Generation**  
    - Captured noseprint → Uploaded to **IPFS via Pinata**  
