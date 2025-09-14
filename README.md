@@ -14,8 +14,8 @@
 ## Preview
 
 <p align="center">
-  <img src="public/assets/verticalImg.png" height="250" style="border:2px solid #ccc; border-radius:10px; margin-right:10px;" />
-  <img src="public/assets/horizontalImg.png" height="250" style="border:2px solid #ccc; border-radius:10px;" />
+  <img src="public/assets/p2.png" height="250" style="border:2px solid #ccc; border-radius:10px; margin-right:10px;" />
+  <img src="public/assets/p1.png" height="250" style="border:2px solid #ccc; border-radius:10px;" />
 </p>
 
 ---
