@@ -4,7 +4,6 @@ body {
 }
 
 .text-center{
-  /* min-height: 100vh;  */
   display: flex;
   flex-direction: column;
   justify-content: center !important;
@@ -40,3 +39,4 @@ body {
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
+

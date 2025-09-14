@@ -1,0 +1,26 @@
+<% if (success.length > 0) { %>
+  <div class="alert alert-success text-center"><%= success%></div>
+<% } %>
+
+<% if (wrong.length > 0) { %>
+  <div class="alert alert-danger text-center"><%= wrong %></div>
+<% } %>
+
+<div class="text-center">
+  <div class="card">
+    <div class="top">
+      <img src="../assets/logo2.png" alt="PupProof Logo" class="logo">
+      <h2>Create Account</h2>
+    </div>
+    <form action="/user/signup" method="POST">
+      <input type="text" name="name" placeholder="Full Name" required>
+      <input type="email" name="email" placeholder="Email Address" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+      <button type="submit" class="btn-upload">Sign Up</button>
+    </form>
+    <div class="login-link">
+      Already have an account? <a href="/user/login">Login here</a>
+    </div>
+  </div>
+</div>

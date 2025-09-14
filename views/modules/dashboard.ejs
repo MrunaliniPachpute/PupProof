@@ -1,0 +1,114 @@
+<% let totalPoints = history.reduce((sum, e) => sum + (e.pointsEarned || 0), 0); %>
+<div class="container my-4">
+  <% if (success && success.length> 0) { %> <% success.forEach(msg=> { %>
+  <div class="alert alert-success text-center"><%= msg %></div>
+  <% }) %> <% } %> <% if (wrong && wrong.length> 0) { %> <% wrong.forEach(msg=>
+  { %>
+  <div class="alert alert-danger text-center"><%= msg %></div>
+  <% }) %> <% } %>
+  <div class="d-flex align-items-center mb-3">
+    <i class="fa-solid fa-user fa-lg text-primary me-2"></i>
+    <h3 class="m-0"><%= user.name %></h3>
+  </div>
+
+  <div class="d-flex flex-wrap justify-content-evenly gap-3">
+    <div
+      class="card p-4 mb-4 flex-fill"
+      style="min-width: 300px; max-width: 400px"
+    >
+      <div class="text-center">
+        <img src="../assets/logo2.png" alt="PupProof Logo" class="logo mb-2" />
+        <h4>Refill Dog Feeder</h4>
+        <small class="text-muted">Add 2 images before and after fill!</small>
+        <form
+          action="/refill"
+          method="POST"
+          enctype="multipart/form-data"
+          class="d-flex flex-column align-items-center mt-3"
+        >
+          <input
+            type="file"
+            name="beforeFill"
+            accept="image/*"
+            required
+            class="mb-2"
+          />
+          <input
+            type="file"
+            name="afterFill"
+            accept="image/*"
+            required
+            class="mb-2"
+          />
+          <button type="submit" class="btn-upload btn btn-primary">
+            Submit Refill
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Points Card -->
+    <div
+      class="card p-4 mb-4 text-center flex-fill"
+      style="min-width: 200px; max-width: 300px"
+    >
+      <h4>Total Coins / Points</h4>
+      <p class="display-4 text-primary">
+        <i class="fa fa-coins me-2"></i>
+        <%= totalPoints %>
+      </p>
+      <small class="text-muted"
+        >Points earned from accepted refill events</small
+      >
+      <hr />
+      <p>Keep refilling nearby feeders to earn more points!</p>
+    </div>
+
+    <!-- History Card -->
+    <div
+      class="card p-3 mb-4 flex-fill"
+      style="min-width: 300px; max-width: 600px"
+    >
+      <h4>Your Refill History</h4>
+      <table class="table table-striped mt-2">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Machine ID</th>
+            <th>Refilled At</th>
+            <th>Points Earned</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (history && history.length> 0) { %> <% history.forEach((event,
+          index)=> { %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <td><%= event.machineId %></td>
+            <td><%= event.timestamp.toLocaleString() %></td>
+            <td><%= event.pointsEarned %></td>
+            <td>
+              <% if(event.status==='completed' ) { %>
+              <span class="badge bg-success">Completed</span>
+              <% } else if(event.status==='pending' ) { %>
+              <span class="badge bg-warning text-dark">Pending</span>
+              <% } else { %>
+              <span class="badge bg-danger">Failed</span>
+              <% } %>
+            </td>
+          </tr>
+          <% }) %> <% } else { %>
+          <tr>
+            <td colspan="5">No refill history yet.</td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="text-center mb-4">
+    <a href="/user/logout" class="btn btn-danger">Logout</a>
+  </div>
+</div>
